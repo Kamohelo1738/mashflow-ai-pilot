@@ -1,1 +1,7 @@
 project_id = "nbkwppneixdvhcmczzxm"
+
+[functions.generate-audit]
+verify_jwt = false
+
+[functions.generate-document]
+verify_jwt = false
