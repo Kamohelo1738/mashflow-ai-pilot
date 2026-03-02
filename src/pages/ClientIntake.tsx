@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const industries = [
   "Law Firm", "Construction", "Professional Services", "SME", "Retail",
@@ -25,7 +26,9 @@ const companySizes = [
 ];
 
 export default function ClientIntake() {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     clientName: "", companyName: "", email: "", phone: "",
@@ -104,15 +107,29 @@ export default function ClientIntake() {
     },
   ];
 
-  const handleSubmit = () => {
-    toast.success("Client intake completed! Business profile generated.");
-    setStep(0);
-    setForm({
-      clientName: "", companyName: "", email: "", phone: "",
-      industry: "", companySize: "", revenueRange: "",
-      services: "", tools: "", processes: "",
-      painPoints: "", goals: "", budget: "", timeline: "",
-    });
+  const handleSubmit = async () => {
+    if (!form.clientName || !form.companyName) { toast.error("Name and company are required"); return; }
+    setSubmitting(true);
+    const { error } = await supabase.from("clients").insert([{
+      client_name: form.clientName,
+      company_name: form.companyName,
+      email: form.email || null,
+      phone: form.phone || null,
+      industry: form.industry || null,
+      company_size: form.companySize || null,
+      services: form.services || null,
+      tools: form.tools || null,
+      processes: form.processes || null,
+      pain_points: form.painPoints || null,
+      goals: form.goals || null,
+      budget: form.budget || null,
+      timeline: form.timeline || null,
+      status: "lead",
+    }]);
+    setSubmitting(false);
+    if (error) { toast.error("Failed to save client"); return; }
+    toast.success("Client saved! Redirecting to clients...");
+    navigate("/clients");
   };
 
   return (
@@ -156,8 +173,8 @@ export default function ClientIntake() {
           {step < steps.length - 1 ? (
             <Button onClick={() => setStep(step + 1)}>Continue</Button>
           ) : (
-            <Button onClick={handleSubmit} className="bg-gradient-gold text-primary-foreground hover:opacity-90">
-              Complete Intake
+            <Button onClick={handleSubmit} disabled={submitting} className="bg-gradient-gold text-primary-foreground hover:opacity-90">
+              {submitting ? "Saving..." : "Complete Intake"}
             </Button>
           )}
         </div>
