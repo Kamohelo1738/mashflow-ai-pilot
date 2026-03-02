@@ -14,7 +14,148 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audits: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          report_content: string | null
+          status: string
+          summary: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          report_content?: string | null
+          status?: string
+          summary?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          report_content?: string | null
+          status?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audits_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          budget: string | null
+          client_name: string
+          company_name: string
+          company_size: string | null
+          created_at: string
+          email: string | null
+          goals: string | null
+          id: string
+          industry: string | null
+          pain_points: string | null
+          phone: string | null
+          processes: string | null
+          services: string | null
+          status: string
+          timeline: string | null
+          tools: string | null
+          updated_at: string
+        }
+        Insert: {
+          budget?: string | null
+          client_name: string
+          company_name: string
+          company_size?: string | null
+          created_at?: string
+          email?: string | null
+          goals?: string | null
+          id?: string
+          industry?: string | null
+          pain_points?: string | null
+          phone?: string | null
+          processes?: string | null
+          services?: string | null
+          status?: string
+          timeline?: string | null
+          tools?: string | null
+          updated_at?: string
+        }
+        Update: {
+          budget?: string | null
+          client_name?: string
+          company_name?: string
+          company_size?: string | null
+          created_at?: string
+          email?: string | null
+          goals?: string | null
+          id?: string
+          industry?: string | null
+          pain_points?: string | null
+          phone?: string | null
+          processes?: string | null
+          services?: string | null
+          status?: string
+          timeline?: string | null
+          tools?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      documents: {
+        Row: {
+          client_id: string | null
+          content: string | null
+          created_at: string
+          doc_type: string
+          id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          client_id?: string | null
+          content?: string | null
+          created_at?: string
+          doc_type?: string
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string | null
+          content?: string | null
+          created_at?: string
+          doc_type?: string
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
